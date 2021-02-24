@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {AlertController, ToastController} from '@ionic/angular';
+import {ActionSheetController, AlertController, ToastController} from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +10,13 @@ export class HomePage {
 
   tasks: any[] = [];
   constructor(private alertCtrl: AlertController,
-              private toastCtrl: ToastController) {}
+              private toastCtrl: ToastController,
+              private actionSheetCtrl: ActionSheetController) {
+    const taskJson = localStorage.getItem('taskDB');
+    if (taskJson != null) {
+      this.tasks = JSON.parse(taskJson);
+    }
+  }
 
   async showAdd() {
     const alert = await this.alertCtrl.create({
@@ -61,6 +67,27 @@ export class HomePage {
 
   updateLocalStorage() {
     localStorage.setItem('taskDB', JSON.stringify(this.tasks));
+  }
+
+  async openActions(task: any) {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'O QUE DESEJA FAZER?',
+      buttons: [
+        {
+          text: task.done ? 'Desmarcar' : 'Marcar',
+          icon: task.done ? 'radio-button-off' : 'checkmar-circle',
+          handler: () => {
+            task.done = !task.done;
+            this.updateLocalStorage();
+          }
+        },
+        {
+          text: 'Cancelar',
+          icon: 'close',
+        }
+      ]
+    });
+    actionSheet.present();
   }
 
 }
