@@ -75,7 +75,7 @@ export class HomePage {
       buttons: [
         {
           text: task.done ? 'Desmarcar' : 'Marcar',
-          icon: task.done ? 'radio-button-off' : 'checkmar-circle',
+          icon: task.done ? 'radio-button-off' : 'checkmark-circle',
           handler: () => {
             task.done = !task.done;
             this.updateLocalStorage();
@@ -88,6 +88,11 @@ export class HomePage {
       ]
     });
     actionSheet.present();
+  }
+
+  deleteTask(task: any) {
+    this.tasks = this.tasks.filter(taskArray => taskArray !== task);
+    this.updateLocalStorage();
   }
 
 }
